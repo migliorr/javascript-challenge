@@ -10,33 +10,39 @@ var table = d3.select('table');
 table.classed('table-striped', true);
 
 //Use D3 to select table body
-var tbody = d3.select('tbody');
-// Go rec by rec from table
-tableData.forEach(function(fn){
-    //console.log(fn);
-    var row = tbody.append('tr');
-    Object.entries(fn).forEach(function([a,b]){
-        //console.log(a,b);
-        var cell = row.append('td');
-        zcc = cell.text(b)
-        //console.log(tbody)
+//var tbody = d3.select('tbody');
+
+// Go rec by rec from table adding to page
+function fillTable(data){
+    var tbody = d3.select('tbody');
+    //d3.select("tbody").html("");
+    tbody.html("");
+    data.forEach(function(fn){
+        var row = tbody.append('tr');
+        
+        Object.entries(fn).forEach(function([Index,value]){
+            var cell = row.append('td');
+            var content = cell.text(value);
+            console.log(value);
+        });     
     });
-    
-    //row.append("td").text(tableData[fn]);
-    
-});
+}
 
-var inputFilter = d3.select("#datetime");
+fillTable(tableData);
 
-function handleFilter(){
-    filterby = d3.event.target;
-    console.log('f1',filterby)
-};
+function clickEvent(){
+    console.log("passei")
+    d3.event.preventDefault();
+    var date = d3.select("#datetime").property("value");
+    var filterDateTime = tableData;
+    if(date) {
+        filterDateTime = filterDateTime.filter((row) => row.datetime === date);
+    }
+    fillTable(filterDateTime);
+    console.log(filterDateTime);
+    console.log("filter eh:", date);
+}
 
-inputFilter.on('change',function(){
-    var oqee = d3.event.target.value;
-    
-    console.log("zl",oqee);
-});
+d3.selectAll("#filter-btn").on("click", clickEvent);
 
 
